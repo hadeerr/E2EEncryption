@@ -1,6 +1,8 @@
 package com.example.e2eencryption;
+import android.opengl.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import java.security.KeyPair;
@@ -55,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
             PrivateKey key2 = (PrivateKey) map.get("RSAPrivateKey");
             txt_public_key.setText("PUBLIC KEY  \n"+key+"");
             txt_private_key.setText("PRIVATE KEY  \n"+key2+"");
-            txt_encrypted_message.setText("ENCRYPTED MESSAGE  \n" +new String(RSA.encrypt(key, "this is a secret message ")));
-            txt_decrypted_message.setText("DECRYPTED MESSAGE  \n"+new String(RSA.decrypt(key2 , RSA.encrypt(key, "this is a secret message "))));
+            txt_encrypted_message.setText("ENCRYPTED MESSAGE By RSA  \n" +new String(RSA.encrypt(key, "this is a secret message ")));
+            txt_decrypted_message.setText("DECRYPTED MESSAGE By RSA  \n"+new String(RSA.decrypt(key2 , RSA.encrypt(key, "this is a secret message "))));
             txt_original_message.setText("ORIGINAL MESSAGE   \nthis is a secret message ");
             String encryptedpublickey = RSA.getPublicKey(map);
             String encryptedprivatekey = RSA.getPrivateKey(map);
@@ -68,17 +70,18 @@ public class MainActivity extends AppCompatActivity {
             KeyPair bob = DiffHelman.generateKeyPair();
             SecretKey encreptKey = DiffHelman.combine(alice.getPrivate(), bob.getPublic());
             SecretKey decreptedKey = DiffHelman.combine(bob.getPrivate(), alice.getPublic());
-
-            txt_secret_key.setText("ENCRYPTED SECRET KEY \n"+new String(encreptKey.getEncoded()));
-            txt_secret_key2.setText("DECRYPTED SECRET KEY \n"+new String(decreptedKey.getEncoded()));
+            txt_secret_key.setVisibility(View.GONE);
+            txt_secret_key2.setVisibility(View.GONE);
+//            txt_secret_key.setText("ENCRYPTED SECRET KEY \n"+new String(encreptKey.getEncoded()));
+//            txt_secret_key2.setText("DECRYPTED SECRET KEY \n"+new String(decreptedKey.getEncoded()));
             System.out.println(new String(encreptKey.getEncoded()));
             System.out.println(new String(decreptedKey.getEncoded()));
             String encreptedMessage = DiffHelman.encrypt("this is a secret message ".getBytes(), encreptKey);
             System.out.println(encreptedMessage);
-            txt_secret_enc_message.setText("ENCRYPTED MESSAGE SECRET \n"+encreptedMessage);
+            txt_secret_enc_message.setText("ENCRYPTED MESSAGE SECRET  by DiffHelman \n"+encreptedMessage);
             String decreptedMessage = DiffHelman.decrypt(encreptedMessage.getBytes(), decreptedKey);
             System.out.println(decreptedMessage);
-            txt_secret_dec_message.setText("DECRYPTED MESSAGE SECRET \n"+decreptedMessage);
+            txt_secret_dec_message.setText("DECRYPTED MESSAGE SECRET by  DiffHelman \n"+decreptedMessage);
 
 
         } catch (Exception e) {
